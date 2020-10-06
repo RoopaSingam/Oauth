@@ -3,13 +3,16 @@ import auth0 from "auth0-js";
 
 import {AUTH_CONFIG} from "../auth0-variables";
 import {AuthProvider} from "../authContext";
+import Cookie from 'universal-cookie';
+
 
 const auth = new auth0.WebAuth({
   domain: AUTH_CONFIG.domain,
   clientID: AUTH_CONFIG.clientId,
   redirectUri: AUTH_CONFIG.callbackUrl,
   audience: `https://${AUTH_CONFIG.domain}/userinfo`,
-  responseType: "token id_token"
+  responseType: "token id_token",
+  
 });
 
 class Auth extends Component {
@@ -22,20 +25,28 @@ class Auth extends Component {
   };
 
   initiateLogin = () => {
-    auth.authorize({
-      
+  auth.authorize({
     });
+
   };
 
   logout = () => {
-    this.setState({
-      ...this.state,
-      authenticated: false,
-      user: {
-        role: "visitor"
-      },
-      accessToken: ""
+    var webAuth = new auth0.WebAuth({
+      domain: AUTH_CONFIG.domain   ,
+      clientID:   AUTH_CONFIG.clientId   ,
     });
+    
+    webAuth.logout({
+      client_id:  AUTH_CONFIG.clientId 
+    });
+    // this.setState({
+    //   ...this.state,
+    //   authenticated: false,
+    //   user: {
+    //     role: "visitor"
+    //   },
+    //   accessToken: ""
+    // });
   };
 
   handleAuthentication = () => {
